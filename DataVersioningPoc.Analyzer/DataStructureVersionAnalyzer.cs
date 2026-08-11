@@ -12,6 +12,7 @@ namespace DataVersioningPoc.Analyzer;
 #pragma warning restore RS1038 // Compiler extensions should be implemented in assemblies with compiler-provided references
 public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
 {
+    // regelsets
     private static readonly DiagnosticDescriptor Rule = new(
     id: "DSV001",
     title: "DataStructureVersion must be increased",
@@ -29,6 +30,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
     defaultSeverity: DiagnosticSeverity.Warning,
     isEnabledByDefault: true);
 
+    // voor Roslyn zodat het weet wel diagnostics er mogelijk zijn
     public override ImmutableArray<DiagnosticDescriptor>
     SupportedDiagnostics =>
     [
@@ -36,6 +38,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
         MigrationWarning
     ];
 
+    // Dit is waar de codeanalysis daadwerkelijk wordt uitgevoerd
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -74,6 +77,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
 
         int version = (int)attribute.ConstructorArguments[0].Value!;
 
+        //Huidige model uitlezen
         PropertySnapshot[] properties = type.GetMembers()
             .OfType<IPropertySymbol>()
             .Where(property => !property.IsImplicitlyDeclared)
@@ -83,6 +87,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
             .OrderBy(property => property.Name)
             .ToArray();
 
+        // Huidige model omzetten naar een snapshot
         ModelSnapshot snapshot = new ModelSnapshot(type.ToDisplayString(), version, properties);
 
         if (!baseline.TryGetValue(snapshot.FullyQualifiedName, out var baselineSnapshot))
@@ -92,8 +97,10 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
 
         ModelComparer comparer = new ModelComparer();
 
+        //Baseline en current vergelijken
         IReadOnlyList<ModelChange> changes = comparer.Compare(snapshot, baselineSnapshot);
 
+        // controleren of er veranderingen zijn en de regels toepassen
         if (changes.Any())
         {
             if (snapshot.Version == baselineSnapshot.Version)
@@ -129,6 +136,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    // Beschrijving van de aanpassing
     private static string DescribeChange(
     ModelChange change)
     {

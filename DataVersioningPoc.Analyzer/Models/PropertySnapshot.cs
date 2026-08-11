@@ -6,6 +6,7 @@ namespace DataVersioningPoc.Analyzer.Models;
 
 public sealed class PropertySnapshot
 {
+    //Wat er bewaard wordt van iedere property
     public PropertySnapshot(string name, string type)
     {
         Name = name;

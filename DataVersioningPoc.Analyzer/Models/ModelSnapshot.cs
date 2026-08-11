@@ -6,6 +6,7 @@ namespace DataVersioningPoc.Analyzer.Models;
 
 public sealed class ModelSnapshot
 {
+    // om de modelstructuur vast te leggen voor de models
     public ModelSnapshot(
         string fullyQualifiedName,
         int version,

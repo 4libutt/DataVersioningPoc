@@ -9,6 +9,7 @@ namespace DataVersioningPoc.Analyzer.Baseline;
 
 public sealed class BaselineReader
 {
+    // JSON lezen en omzetten naar onze interne modellen.
     public Dictionary<string, ModelSnapshot> Read(ImmutableArray<AdditionalText> additionalFiles)
     {
         AdditionalText? baselineFile = additionalFiles.FirstOrDefault(file => Path.GetFileName(file.Path) == "model-baseline.json");
