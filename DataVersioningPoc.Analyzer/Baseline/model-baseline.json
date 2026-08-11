@@ -1,0 +1,15 @@
+﻿{
+  "DataVersioningPoc.Models.Patient": {
+    "version": 1,
+    "properties": [
+      {
+        "name": "Name",
+        "type": "string"
+      },
+      {
+        "name": "BirthDate",
+        "type": "global::System.DateTime"
+      }
+    ]
+  }
+}
