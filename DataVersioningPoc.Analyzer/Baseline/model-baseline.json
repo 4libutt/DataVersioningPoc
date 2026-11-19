@@ -1,14 +1,89 @@
-﻿{
-  "DataVersioningPoc.Models.Patient": {
+{
+  "DataVersioningPoc.Models.Order": {
     "version": 1,
     "properties": [
       {
-        "name": "Name",
-        "type": "string"
+        "name": "CreatedAt",
+        "type": "System.DateTime"
       },
       {
+        "name": "Id",
+        "type": "System.Int32"
+      },
+      {
+        "name": "TotalAmount",
+        "type": "System.Decimal"
+      }
+    ]
+  },
+  "DataVersioningPoc.Models.Patient": {
+    "version": 2,
+    "properties": [
+      {
         "name": "BirthDate",
-        "type": "global::System.DateTime"
+        "type": "System.DateTime"
+      },
+      {
+        "name": "LastName",
+        "type": "System.String"
+      },
+      {
+        "name": "Name",
+        "type": "System.String"
+      },
+      {
+        "name": "PhoneNumber",
+        "type": "System.String"
+      }
+    ]
+  },
+  "DataVersioningPoc.Models.SnapshotComplexTypes": {
+    "version": 2,
+    "properties": [
+      {
+        "name": "BirthDate",
+        "type": "System.DateTime?"
+      },
+      {
+        "name": "Dates",
+        "type": "System.Collections.Generic.List\u003CSystem.DateTime?\u003E"
+      },
+      {
+        "name": "Id",
+        "type": "System.Int32"
+      },
+      {
+        "name": "MiddleName",
+        "type": "System.String?"
+      },
+      {
+        "name": "Names",
+        "type": "System.Collections.Generic.List\u003CSystem.String\u003E"
+      },
+      {
+        "name": "NullableNames",
+        "type": "System.Collections.Generic.List\u003CSystem.String?\u003E"
+      },
+      {
+        "name": "Properties",
+        "type": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E"
+      },
+      {
+        "name": "Scores",
+        "type": "System.Int32[]"
+      }
+    ]
+  },
+  "DataVersioningPoc.Models.SnapshotTest": {
+    "version": 1,
+    "properties": [
+      {
+        "name": "Id",
+        "type": "System.Int32"
+      },
+      {
+        "name": "Name",
+        "type": "System.String"
       }
     ]
   }

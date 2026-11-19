@@ -1,4 +1,4 @@
-﻿using DataVersioningPoc.Analyzer.Models;
+﻿using DataVersioningPoc.Shared;
 
 namespace DataVersioningPoc.Analyzer.Comparison;
 

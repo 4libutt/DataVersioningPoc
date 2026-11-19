@@ -1,5 +1,7 @@
 <Solution>
   <Project Path="DataVersioningPoc.Analyzer/DataVersioningPoc.Analyzer.csproj" />
   <Project Path="DataVersioningPoc.App/DataVersioningPoc.App.csproj" />
+  <Project Path="DataVersioningPoc.Generator/DataVersioningPoc.Generator.csproj" DisplayName="DataVersioningPoc.Generator" />
   <Project Path="DataVersioningPoc.Models/DataVersioningPoc.Models.csproj" />
+  <Project Path="DataVersioningPoc.Shared/DataVersioningPoc.Shared.csproj" />
 </Solution>

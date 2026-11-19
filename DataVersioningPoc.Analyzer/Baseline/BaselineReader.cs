@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using DataVersioningPoc.Analyzer.Models;
+using DataVersioningPoc.Shared;
 using Microsoft.CodeAnalysis;
 
 namespace DataVersioningPoc.Analyzer.Baseline;
@@ -12,7 +12,8 @@ public sealed class BaselineReader
     // JSON lezen en omzetten naar onze interne modellen.
     public Dictionary<string, ModelSnapshot> Read(ImmutableArray<AdditionalText> additionalFiles)
     {
-        AdditionalText? baselineFile = additionalFiles.FirstOrDefault(file => Path.GetFileName(file.Path) == "model-baseline.json");
+        AdditionalText? baselineFile = additionalFiles.FirstOrDefault(
+            file => Path.GetFileName(file.Path).Equals("model-baseline.json", StringComparison.OrdinalIgnoreCase));
 
         if (baselineFile is null)
         {
@@ -26,28 +27,7 @@ public sealed class BaselineReader
             return new Dictionary<string, ModelSnapshot>();
         }
 
-        JsonSerializerOptions options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
-
-        Dictionary<string, BaselineModel>? rawModels = JsonSerializer.Deserialize<Dictionary<string, BaselineModel>>(text, options);
-
-        if (rawModels is null)
-        {
-            return new Dictionary<string, ModelSnapshot>();
-        }
-
-        return rawModels.ToDictionary(
-            pair => pair.Key,
-            pair => new ModelSnapshot(
-                pair.Key,
-                pair.Value.Version,
-                pair.Value.Properties
-                    .Select(property => new PropertySnapshot(
-                        property.Name,
-                        property.Type))
-                    .ToArray()));
+        return ModelSnapshotSerializer.Deserialize(text);
     }
 
     private sealed class BaselineModel
