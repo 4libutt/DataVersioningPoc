@@ -6,11 +6,7 @@ namespace DataVersioningPoc.Analyzer.Comparison
 {
     public sealed class ModelChange
     {
-        public ModelChange(
-            ModelChangeType type,
-            string propertyName,
-            string? oldType = null,
-            string? newType = null)
+        public ModelChange(ModelChangeType type, string propertyName, string? oldType = null, string? newType = null)
         {
             Type = type;
             PropertyName = propertyName;

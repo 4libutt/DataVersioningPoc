@@ -1,23 +1,6 @@
 {
-  "DataVersioningPoc.Models.Order": {
-    "version": 1,
-    "properties": [
-      {
-        "name": "CreatedAt",
-        "type": "System.DateTime"
-      },
-      {
-        "name": "Id",
-        "type": "System.Int32"
-      },
-      {
-        "name": "TotalAmount",
-        "type": "System.Decimal"
-      }
-    ]
-  },
   "DataVersioningPoc.Models.Patient": {
-    "version": 2,
+    "version": 1,
     "properties": [
       {
         "name": "BirthDate",
@@ -30,15 +13,11 @@
       {
         "name": "Name",
         "type": "System.String"
-      },
-      {
-        "name": "PhoneNumber",
-        "type": "System.String"
       }
     ]
   },
   "DataVersioningPoc.Models.SnapshotComplexTypes": {
-    "version": 2,
+    "version": 1,
     "properties": [
       {
         "name": "BirthDate",
@@ -53,16 +32,8 @@
         "type": "System.Int32"
       },
       {
-        "name": "MiddleName",
-        "type": "System.String?"
-      },
-      {
         "name": "Names",
         "type": "System.Collections.Generic.List\u003CSystem.String\u003E"
-      },
-      {
-        "name": "NullableNames",
-        "type": "System.Collections.Generic.List\u003CSystem.String?\u003E"
       },
       {
         "name": "Properties",

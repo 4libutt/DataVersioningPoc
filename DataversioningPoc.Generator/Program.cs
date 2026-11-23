@@ -14,19 +14,13 @@ string baselinePath = Path.GetFullPath(args[1]);
 try
 {
     ModelSnapshotBuilder builder = new();
-
-    IReadOnlyList<DataVersioningPoc.Shared.ModelSnapshot> snapshots =
-        builder.BuildSnapshots(assemblyPath);
-
+    IReadOnlyList<DataVersioningPoc.Shared.ModelSnapshot> snapshots = builder.BuildSnapshots(assemblyPath);
     SnapshotWriter writer = new();
-
     writer.WriteIfChanged(baselinePath, snapshots);
-
     return 0;
 }
 catch (Exception exception)
 {
     Console.Error.WriteLine(exception);
-
     return 1;
 }

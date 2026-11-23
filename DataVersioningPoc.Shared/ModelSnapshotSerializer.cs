@@ -19,7 +19,6 @@ namespace DataVersioningPoc.Shared
         public static Dictionary<string, ModelSnapshot> Deserialize(string json)
         {
             Dictionary<string, ModelSnapshot> snapshots = JsonSerializer.Deserialize<Dictionary<string, ModelSnapshot>>(json, SerializerOptions) ?? new Dictionary<string, ModelSnapshot>();
-
             foreach (KeyValuePair<string, ModelSnapshot> entry in snapshots)
             {
                 entry.Value.FullyQualifiedName = entry.Key;
@@ -33,7 +32,7 @@ namespace DataVersioningPoc.Shared
             Dictionary<string, ModelSnapshot> orderedSnapshots = snapshots
                 .OrderBy(snapshot => snapshot.FullyQualifiedName, StringComparer.Ordinal)
                 .ToDictionary(snapshot => snapshot.FullyQualifiedName, snapshot => new ModelSnapshot(snapshot.FullyQualifiedName, snapshot.Version, snapshot.Properties
-                            .OrderBy(property => property.Name, StringComparer.Ordinal).ToArray()));
+                .OrderBy(property => property.Name, StringComparer.Ordinal).ToArray()));
 
             return JsonSerializer.Serialize(orderedSnapshots, SerializerOptions) + "\n";
         }

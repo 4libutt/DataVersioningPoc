@@ -15,9 +15,7 @@ public sealed class ModelSnapshotBuilder
         }
 
         Assembly assembly = Assembly.LoadFrom(assemblyPath);
-
         List<ModelSnapshot> snapshots = [];
-
         IEnumerable<Type> modelTypes = assembly.GetTypes()
             .Where(type => type.IsClass || type.IsValueType)
             .Where(type => type is { IsAbstract: false, IsInterface: false });
@@ -60,10 +58,8 @@ public sealed class ModelSnapshotBuilder
     private static string GetPropertyTypeName(NullabilityInfo nullabilityInfo)
     {
         Type propertyType = nullabilityInfo.Type;
-
         // Nullable value types, bijvoorbeeld int? en DateTime?
         Type? nullableType = Nullable.GetUnderlyingType(propertyType);
-
         if (nullableType is not null)
         {
             return $"{GetTypeName(nullableType)}?";
@@ -75,7 +71,6 @@ public sealed class ModelSnapshotBuilder
         if (propertyType.IsArray)
         {
             NullabilityInfo elementInfo = nullabilityInfo.ElementType!;
-
             typeName = $"{GetPropertyTypeName(elementInfo)}[]";
         }
         // Generieke types
@@ -103,7 +98,6 @@ public sealed class ModelSnapshotBuilder
     private static string GetTypeName(Type type)
     {
         Type? nullableType = Nullable.GetUnderlyingType(type);
-
         if (nullableType is not null)
         {
             return $"{GetTypeName(nullableType)}?";

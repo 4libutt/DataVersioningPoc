@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataVersioningPoc.Models;
 
-[DataStructureVersion(2)]
+[DataStructureVersion(1)]
 public class SnapshotComplexTypes
 {
     public int Id { get; set; }
@@ -17,7 +17,7 @@ public class SnapshotComplexTypes
     public Dictionary<string, int> Properties { get; set; } = [];
 
     public List<DateTime?> Dates { get; set; } = [];
-    public string? MiddleName { get; set; }
+    //public string? MiddleName { get; set; }
 
-    public List<string?> NullableNames { get; set; } = [];
+    //public List<string?> NullableNames { get; set; } = [];
 }

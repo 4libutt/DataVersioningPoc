@@ -7,9 +7,7 @@ namespace DataVersioningPoc.Generator.Snapshot
         public void WriteIfChanged(string baselinePath, IReadOnlyList<ModelSnapshot> snapshots)
         {
             string newJson = ModelSnapshotSerializer.Serialize(snapshots);
-
             string currentJson = File.Exists(baselinePath) ? File.ReadAllText(baselinePath) : string.Empty;
-
             if (string.Equals(currentJson, newJson, StringComparison.Ordinal))
             {
                 Console.WriteLine("Snapshot is already up to date.");

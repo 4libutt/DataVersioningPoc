@@ -4,13 +4,13 @@ using System.Text;
 
 namespace DataVersioningPoc.Models
 { 
-    [DataStructureVersion(2)]
+    [DataStructureVersion(1)]
     public class Patient
     {
         public DateTime BirthDate { get; set; }
         public string Name { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
+        //public string PhoneNumber { get; set; } = string.Empty;
 
     }
 }

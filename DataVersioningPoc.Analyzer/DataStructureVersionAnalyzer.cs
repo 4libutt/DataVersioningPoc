@@ -31,8 +31,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
     private static readonly DiagnosticDescriptor MigrationWarning = new(
     id: "DSV002",
     title: "Data migration may be required",
-    messageFormat:
-        "DataStructureVersion for persisted model '{0}' was increased " + "from {1} to {2}. Existing persisted data may require a migration.",
+    messageFormat: "DataStructureVersion for persisted model '{0}' was increased " + "from {1} to {2}. Existing persisted data may require a migration.",
     category: "DataVersioning",
     defaultSeverity: DiagnosticSeverity.Warning,
     isEnabledByDefault: true);
@@ -48,8 +47,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
     private static readonly DiagnosticDescriptor NewPersistedModel = new(
     id: "DSV004",
     title: "New persisted model detected",
-    messageFormat:
-        "New persisted model '{0}' detected with DataStructureVersion {1}. Its snapshot will be added to the baseline.",
+    messageFormat: "New persisted model '{0}' detected with DataStructureVersion {1}. Its snapshot will be added to the baseline.",
     category: "DataVersioning",
     defaultSeverity: DiagnosticSeverity.Warning,
     isEnabledByDefault: true);
@@ -88,11 +86,8 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-
         context.EnableConcurrentExecution();
-
-        context.RegisterCompilationStartAction(
-        compilationContext =>
+        context.RegisterCompilationStartAction(compilationContext =>
         {
             BaselineReader baselineReader = new();
 
@@ -105,8 +100,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
                 },
                 SymbolKind.NamedType);
 
-            compilationContext.RegisterCompilationEndAction(
-                compilationAnalysisContext =>
+            compilationContext.RegisterCompilationEndAction(compilationAnalysisContext =>
                 {
                     AnalyzeRemovedModels(compilationAnalysisContext, baseline);
                 });
@@ -116,7 +110,6 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeNamedType(SymbolAnalysisContext context, Dictionary<string, ModelSnapshot> baseline)
     {
         INamedTypeSymbol type = (INamedTypeSymbol)context.Symbol;
-
         AttributeData? attribute = type.GetAttributes()
             .FirstOrDefault(attribute => attribute.AttributeClass?.ToDisplayString() == "DataVersioningPoc.Models.DataStructureVersionAttribute");
 
@@ -151,7 +144,6 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
 
         // Huidige model omzetten naar een snapshot
         ModelSnapshot snapshot = new ModelSnapshot(type.ToDisplayString(), version, properties);
-
         if (!baseline.TryGetValue(snapshot.FullyQualifiedName, out ModelSnapshot? baselineSnapshot))
         {
             Diagnostic diagnostic = Diagnostic.Create(NewPersistedModel, type.Locations[0], snapshot.FullyQualifiedName, snapshot.Version);
@@ -160,20 +152,13 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
         }
 
         ModelComparer comparer = new ModelComparer();
-
         //Baseline en current vergelijken
         IReadOnlyList<ModelChange> changes = comparer.Compare(snapshot, baselineSnapshot);
 
         // controleren of er veranderingen zijn en de regels toepassen
         if (snapshot.Version < baselineSnapshot.Version)
         {
-            Diagnostic diagnostic = Diagnostic.Create(
-                VersionDecreased,
-                type.Locations[0],
-                snapshot.FullyQualifiedName,
-                baselineSnapshot.Version,
-                snapshot.Version);
-
+            Diagnostic diagnostic = Diagnostic.Create(VersionDecreased, type.Locations[0], snapshot.FullyQualifiedName, baselineSnapshot.Version, snapshot.Version);
             context.ReportDiagnostic(diagnostic);
         }
         else if (changes.Any())
@@ -183,31 +168,17 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
                 foreach (ModelChange change in changes)
                 {
                     ImmutableDictionary<string, string?> diagnosticProperties =
-                        ImmutableDictionary<string, string?>.Empty.Add(
-                            "BaselineVersion",
-                            baselineSnapshot.Version.ToString());
+                        ImmutableDictionary<string, string?>.Empty.Add("BaselineVersion", baselineSnapshot.Version.ToString());
 
                     Diagnostic diagnostic = Diagnostic.Create(
-                        Rule,
-                        type.Locations[0],
-                        diagnosticProperties,
-                        snapshot.FullyQualifiedName,
-                        DescribeChange(change),
-                        snapshot.Version,
-                        baselineSnapshot.Version);
+                        Rule, type.Locations[0], diagnosticProperties, snapshot.FullyQualifiedName, DescribeChange(change), snapshot.Version, baselineSnapshot.Version);
 
                     context.ReportDiagnostic(diagnostic);
                 }
             }
             else
             {
-                Diagnostic diagnostic = Diagnostic.Create(
-                    MigrationWarning,
-                    type.Locations[0],
-                    snapshot.FullyQualifiedName,
-                    baselineSnapshot.Version,
-                    snapshot.Version);
-
+                Diagnostic diagnostic = Diagnostic.Create(MigrationWarning, type.Locations[0], snapshot.FullyQualifiedName, baselineSnapshot.Version, snapshot.Version);
                 context.ReportDiagnostic(diagnostic);
             }
         }
@@ -219,15 +190,9 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
     {
         return change.Type switch
         {
-            ModelChangeType.Added =>
-                $"property '{change.PropertyName}' was added",
-
-            ModelChangeType.Removed =>
-                $"property '{change.PropertyName}' was removed",
-
-            ModelChangeType.TypeChanged =>
-                $"property '{change.PropertyName}' changed type " + $"from '{change.OldType}' to '{change.NewType}'",
-
+            ModelChangeType.Added => $"property '{change.PropertyName}' was added",
+            ModelChangeType.Removed => $"property '{change.PropertyName}' was removed",
+            ModelChangeType.TypeChanged => $"property '{change.PropertyName}' changed type " + $"from '{change.OldType}' to '{change.NewType}'",
             _ => "unknown structural change"
         };
     }
@@ -235,9 +200,7 @@ public sealed class DataStructureVersionAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeRemovedModels(CompilationAnalysisContext context, Dictionary<string, ModelSnapshot> baseline)
     {
         HashSet<string> currentPersistedModels = new(StringComparer.Ordinal);
-
         CollectPersistedModels(context.Compilation.Assembly.GlobalNamespace, currentPersistedModels);
-
         foreach (KeyValuePair<string, ModelSnapshot> baselineEntry in baseline)
         {
             if (currentPersistedModels.Contains(baselineEntry.Key))

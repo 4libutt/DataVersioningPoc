@@ -19,25 +19,20 @@ public sealed class DataStructureVersionCodeFixProvider : CodeFixProvider
     public override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         Diagnostic diagnostic = context.Diagnostics.First();
-
         SyntaxNode? root = await context.Document.GetSyntaxRootAsync(context.CancellationToken);
-
         if (root is null)
         {
             return;
         }
 
         SyntaxNode node = root.FindNode(diagnostic.Location.SourceSpan);
-
         ClassDeclarationSyntax? classDeclaration = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-
         if (classDeclaration is null)
         {
             return;
         }
 
-        if (!diagnostic.Properties.TryGetValue("BaselineVersion", out var baselineVersionText) ||
-            !int.TryParse(baselineVersionText, out var baselineVersion))
+        if (!diagnostic.Properties.TryGetValue("BaselineVersion", out var baselineVersionText) || !int.TryParse(baselineVersionText, out var baselineVersion))
         {
             return;
         }
@@ -50,11 +45,9 @@ public sealed class DataStructureVersionCodeFixProvider : CodeFixProvider
                 equivalenceKey: "IncreaseDataStructureVersion"), diagnostic);
     }
 
-    private static async Task<Document> IncreaseVersionAsync
-        (Document document, ClassDeclarationSyntax classDeclaration, int baselineVersion, CancellationToken cancellationToken)
+    private static async Task<Document> IncreaseVersionAsync(Document document, ClassDeclarationSyntax classDeclaration, int baselineVersion, CancellationToken cancellationToken)
     {
         AttributeSyntax? attribute = FindDataStructureVersionAttribute(classDeclaration);
-
         if (attribute is null)
         {
             return document;
@@ -86,14 +79,8 @@ public sealed class DataStructureVersionCodeFixProvider : CodeFixProvider
         return document.WithSyntaxRoot(newRoot);
     }
 
-    private static AttributeSyntax?
-    FindDataStructureVersionAttribute(
-        ClassDeclarationSyntax classDeclaration)
+    private static AttributeSyntax? FindDataStructureVersionAttribute(ClassDeclarationSyntax classDeclaration)
     {
-        return classDeclaration.AttributeLists
-            .SelectMany(list => list.Attributes)
-            .FirstOrDefault(attribute =>
-                attribute.Name.ToString()
-                    .Contains("DataStructureVersion"));
+        return classDeclaration.AttributeLists.SelectMany(list => list.Attributes).FirstOrDefault(attribute => attribute.Name.ToString().Contains("DataStructureVersion"));
     }
 }
